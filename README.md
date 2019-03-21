@@ -7,7 +7,10 @@ Source code can be found on [GitHub](https://github.com/mplogas/netcore3-windows
 
 ## Preparation
 1. Get netcore 3.0.0 preview (obviously) and install it
-2. make sure you are using the installed version by issueing ```dotnet --version```
+2. make sure you are using the installed version by issueing 
+    ```
+    dotnet --version
+    ```
     a. if you're still seeing something like ```2.2.x``` or ```2.1.x``` add a ```global.json``` to your current folder
     b. insert the following JSON and make sure the version declared in the JSON matches your installed version
     ```json
@@ -17,7 +20,10 @@ Source code can be found on [GitHub](https://github.com/mplogas/netcore3-windows
       }
     }
     ```
-3. create a new dotnet project using the **Worker Service** template: ```dotnet new worker```
+3. create a new dotnet project using the **Worker Service** template: 
+    ```sh
+    dotnet new worker
+    ```
 4. Open the ```*.csproj``` file and modify the ```<PropertyGroup>``` by adding the following lines to it. It sets the **runtime identifier (RID)** to the target platform (*goodbye x-plat netcore o7*) and disables the creation of a ```web.config``` file
     ```xml
     <PropertyGroup>
@@ -42,10 +48,14 @@ Source code can be found on [GitHub](https://github.com/mplogas/netcore3-windows
 
 6. Open ```Program.cs```
 7. Behold! See the wonders of C# 7.1: have an async static Main method! 
-    ```public static async Task Main(string[] args)```
+    ```
+    public static async Task Main(string[] args)
+    ```
 8. Clean the Main method from any calls
 9. When you need a toggle to run your service as console, add this line
-    ```var isService = !(System.Diagnostics.Debugger.IsAttached || args.Contains("--console"));```
+    ```
+    var isService = !(System.Diagnostics.Debugger.IsAttached || args.Contains("--console"));
+    ```
 10. Create a ```HostBuilder``` instance and set up the host configuration. You will need to set the basepath of the host, because a Windows Service app returns the C:\WINDOWS\system32 folder by default when GetCurrentDirectory is called
     ```cs
     var builder = new HostBuilder()
@@ -83,9 +93,13 @@ Source code can be found on [GitHub](https://github.com/mplogas/netcore3-windows
 ## Install the service
 
 15. Build the service in Release configuration
-    ```dotnet build Sample.csp --configuration Release```
+    ```sh
+    dotnet build Sample.csp --configuration Release
+    ```
 16. Register the service on elevated commandline. Don't forget to have a space between the ```binPath=``` and the path!
-    ```λ sc create TestWorker binPath=  "C:\tmp\worker\bin\Release\netcoreapp3.0\win7-x64\Sample.exe"```
+    ```sh
+    λ sc create TestWorker binPath=  "C:\tmp\worker\bin\Release\netcoreapp3.0\win7-x64\Sample.exe"
+    ```
 17. Start the service.
     ```sh
     λ sc start TestWorker
